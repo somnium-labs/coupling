@@ -26,6 +26,13 @@ $ http POST http://localhost:8083/connectors < register-mysql.json
 4. mysql 접속
 5. outbox_event 테이블에 값을 insert 하면 kafka 메시지를 수신하는 것을 로그에서 확인 할 수 있음
 
+- CouplingTestApplication에서 구독하는 토픽 topics: outbox.event.test-topic, general-topic
+- outbox.event는 debezium에서 디폴트로 추가한 prefix (변경 또는 제거 가능)
+
+```
+INSERT INTO outbox_event values('1', 'test-topic', '2', 'createOrder', '{"orderId": "2", "count": 10}', now());
+```
+
 ### TODO
 
 ```
