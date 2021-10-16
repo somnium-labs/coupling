@@ -1,0 +1,26 @@
+# gradle version >= 7.2
+
+[versions]
+kotlin = "1.5.21"
+ktlint = "10.2.0"
+
+[plugins]
+springframework-boot = { id = "org.springframework.boot", version = "2.5.5" }
+spring-boot-dependency-management = { id = "io.spring.dependency-management", version = "1.0.11.RELEASE" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+ktlintidea = { id = "org.jlleitschuh.gradle.ktlint-idea", version.ref = "ktlint" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.18.1" }
+
+[libraries]
+jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core" }
+kotlin-coroutines-reactor = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactor" }
+reactor-kotlin-extensions = { module = "io.projectreactor.kotlin:reactor-kotlin-extensions" }
+spring-boot-data-r2dbc = { module = "org.springframework.boot:spring-boot-starter-data-r2dbc" }
+spring-kafka = { module = "org.springframework.kafka:spring-kafka" }
+r2dbc-mysql = { module = "dev.miku:r2dbc-mysql" }
+spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
