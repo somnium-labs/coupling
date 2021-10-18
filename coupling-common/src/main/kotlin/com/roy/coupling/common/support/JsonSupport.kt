@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
+import kotlin.reflect.KClass
 
 class JsonSupport {
     companion object {
@@ -23,6 +24,10 @@ class JsonSupport {
 
         inline fun <reified T> deserialize(json: String): T {
             return objectMapper.readValue(json)
+        }
+
+        fun <T : Any> deserialize(json: String, targetType: KClass<T>): T {
+            return objectMapper.readValue(json, targetType.java)
         }
     }
 }

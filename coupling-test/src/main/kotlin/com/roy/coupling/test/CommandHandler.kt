@@ -2,32 +2,24 @@ package com.roy.coupling.test
 
 import com.roy.coupling.common.consumer.KafkaMessageConsumer
 import com.roy.coupling.common.logging.Logger.Companion.log
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
-import org.springframework.boot.context.event.ApplicationStartedEvent
-import org.springframework.context.event.EventListener
+import com.roy.coupling.test.commands.CreateOrder
 import org.springframework.stereotype.Service
+
 
 @Service
 class CommandHandler(
-    private val KafkaMessageConsumer: KafkaMessageConsumer
+    KafkaMessageConsumer: KafkaMessageConsumer
 ) {
-    private val applicationStartedEventChannel = Channel<ApplicationStartedEvent>(capacity = 1)
-
     init {
-        CoroutineScope(Dispatchers.Default).launch { run() }
+        KafkaMessageConsumer.commandHandler(CreateOrder::class, ::onReceive)
+        KafkaMessageConsumer.commandHandler(CreateOrder::class, ::onReceive2) // ignore
     }
 
-    private suspend fun run() {
-        KafkaMessageConsumer.start { commandType, payload ->
-            log.info("[$commandType] => $payload")
-        }
+    suspend fun onReceive(data: CreateOrder) {
+        log.info("received: $data")
     }
 
-    @EventListener
-    fun onAppStarted(event: ApplicationStartedEvent) {
-        applicationStartedEventChannel.trySend(event)
+    fun onReceive2(data: CreateOrder) {
+        log.info("received: $data")
     }
 }

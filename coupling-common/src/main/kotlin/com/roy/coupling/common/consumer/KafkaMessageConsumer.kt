@@ -1,58 +1,48 @@
 package com.roy.coupling.common.consumer
 
-import com.roy.coupling.common.config.LifecycleConfiguration
-import com.roy.coupling.common.logging.Logger.Companion.log
-import kotlinx.coroutines.channels.Channel
-import org.springframework.boot.context.event.ApplicationStartedEvent
-import org.springframework.context.annotation.Import
+import com.roy.coupling.common.commands.Command
+import kotlinx.coroutines.runBlocking
 import org.springframework.kafka.annotation.KafkaListener
-import org.springframework.kafka.config.KafkaListenerEndpointRegistry
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.messaging.handler.annotation.Header
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Component
+import kotlin.reflect.KClass
 
 @Component
-@Import(LifecycleConfiguration::class)
-class KafkaMessageConsumer(
-    private val kafkaListenerEndpointRegistry: KafkaListenerEndpointRegistry,
-    private val applicationStartedEvent: Channel<ApplicationStartedEvent>
-) {
-    private lateinit var messageHandler: (String, String) -> Unit
+class KafkaMessageConsumer {
+    val commandHandlers: MutableList<CommandHandler<*>> = mutableListOf()
 
-    suspend fun start(messageHandler: (String, String) -> Unit) {
-        // listner 등록(registerListenerContainer)을 기다려야 한다.
-        applicationStartedEvent.receive()
-
-        this.messageHandler = messageHandler
-        val container = kafkaListenerEndpointRegistry.getListenerContainer(LISTNER_ID)
-        container?.start() ?: throw RuntimeException("")
-    }
-
-    fun stop() {
-        kafkaListenerEndpointRegistry.getListenerContainer(LISTNER_ID)?.stop()
+    fun <C : Command> commandHandler(command: KClass<C>, handler: suspend (C) -> Unit) {
+        commandHandlers.add(CommandHandler(command, handler))
     }
 
     @KafkaListener(
         id = LISTNER_ID,
         idIsGroup = false,
-        autoStartup = "false",
+        autoStartup = "true",
         topics = ["#{topicFactory.split(',')}"],
         containerFactory = "kafkaListenerContainerFactory"
     )
     fun listen(
         acknowledgment: Acknowledgment,
+//        consumerRecord: ConsumerRecord<String, String>,
         @Header("id") id: String,
-        @Header("aggregate_id") aggregateId: String,
+//        @Header("aggregate_id") aggregateId: String,
         @Header("command_type") commandType: String,
         @Payload payload: String,
     ) {
-        try {
-            log.info("aggregateId: $aggregateId")
-            messageHandler.invoke(commandType, payload)
-            acknowledgment.acknowledge() // manual commit
-        } catch (e: Exception) {
-            stop()
+        runBlocking {
+            try {
+                commandHandlers.find {
+                    it.commandClass.qualifiedName == commandType
+                }?.invoke(
+                    payload.substring(1, payload.length - 1).replace("\\", "")
+                )  // TODO: debezium producer serializer?
+                acknowledgment.acknowledge() // manual commit
+            } catch (e: Exception) {
+                // TODO: exception handling
+            }
         }
     }
 
