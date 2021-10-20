@@ -3,6 +3,7 @@
 [versions]
 kotlin = "1.5.21"
 ktlint = "10.2.0"
+arraow = "1.0.0"
 
 [plugins]
 springframework-boot = { id = "org.springframework.boot", version = "2.5.5" }
@@ -20,7 +21,7 @@ jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core" }
 kotlin-coroutines-reactor = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactor" }
 reactor-kotlin-extensions = { module = "io.projectreactor.kotlin:reactor-kotlin-extensions" }
-spring-boot-data-r2dbc = { module = "org.springframework.boot:spring-boot-starter-data-r2dbc" }
+spring-boot-starter-data-r2dbc = { module = "org.springframework.boot:spring-boot-starter-data-r2dbc" }
 spring-kafka = { module = "org.springframework.kafka:spring-kafka" }
 r2dbc-mysql = { module = "dev.miku:r2dbc-mysql" }
 spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }

@@ -1,5 +1,5 @@
 dependencies {
-    implementation(libs.spring.boot.data.r2dbc)
+    api(libs.spring.boot.starter.data.r2dbc)
     implementation(libs.r2dbc.mysql)
     implementation(libs.jackson.module.kotlin)
     implementation(libs.spring.kafka)

@@ -8,6 +8,7 @@ import org.springframework.messaging.handler.annotation.Header
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Component
 import kotlin.reflect.KClass
+import kotlin.reflect.jvm.jvmName
 
 @Component
 class KafkaMessageConsumer {
@@ -35,7 +36,7 @@ class KafkaMessageConsumer {
         runBlocking {
             try {
                 commandHandlers.find {
-                    it.commandClass.qualifiedName == commandType
+                    it.commandClass.jvmName == commandType
                 }?.invoke(
                     payload.substring(1, payload.length - 1).replace("\\", "")
                 )  // TODO: debezium producer serializer?

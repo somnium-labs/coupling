@@ -9,7 +9,12 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 enableFeaturePreview("VERSION_CATALOGS")
 
 rootProject.name = "coupling"
-include("coupling-test")
+include("coupling-core")
+include("coupling-common")
 include("coupling-orchestration")
 include("coupling-participant")
-include("coupling-common")
+
+// example
+include("coupling-example:order-service")
+include("coupling-example:customer-service")
+include("coupling-example:common")

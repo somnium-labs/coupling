@@ -1,0 +1,17 @@
+spring:
+  r2dbc:
+    url: r2dbc:mysql://localhost/coupling
+    username: mysqluser
+    password: mysqlpw
+    pool:
+      enabled: true
+      initial-size: 10
+      max-size: 10
+
+server:
+  port: 8081
+
+logging:
+  level:
+    ROOT: INFO
+    dev.miku.r2dbc.mysql.message.client.TextQueryMessage: DEBUG

@@ -1,0 +1,16 @@
+### 주문 생성
+POST http://{{order-endpoint}}/orders
+Content-Type: application/json
+
+{
+  "customerId": 1,
+  "orderTotal": {
+    "amount": 4
+  }
+}
+
+### 주문 조회
+GET http://{{order-endpoint}}/orders/1
+
+### 모든 주문 조회
+GET http://{{order-endpoint}}/orders/customer/1

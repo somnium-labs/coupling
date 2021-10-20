@@ -40,6 +40,8 @@ subprojects {
     }
 
     dependencies {
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+        implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
         testImplementation("org.testcontainers:junit-jupiter:1.16.0")
     }
