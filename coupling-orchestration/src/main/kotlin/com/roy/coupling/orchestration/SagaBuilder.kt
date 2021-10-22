@@ -1,15 +1,16 @@
 package com.roy.coupling.orchestration
 
-import com.roy.coupling.core.runReleaseAndRethrow
+import arrow.fx.coroutines.ExitCase
+import arrow.fx.coroutines.guaranteeCase
 
-@JvmInline
-value class SagaBuilder<F>(val block: suspend SagaEffect.() -> F) : Saga<F> {
-    suspend fun build(): F {
-        val sagaDefinition = SagaDefinition()
-        try {
-            return block(sagaDefinition)
-        } catch (t: Throwable) {
-            runReleaseAndRethrow(t) { sagaDefinition.totalCompensation() }
+class SagaBuilder<A>(val f: suspend SagaStep.() -> A) : Saga<A> {
+    suspend fun transaction(): A {
+        val sagaDefinitionBuilder = SagaDefinitionBuilder()
+        return guaranteeCase({ f(sagaDefinitionBuilder) }) { exitCase ->
+            when (exitCase) {
+                is ExitCase.Completed -> Unit
+                else -> sagaDefinitionBuilder.totalCompensation()
+            }
         }
     }
 }

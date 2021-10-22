@@ -1,13 +1,22 @@
 package com.roy.coupling.orchestration
 
+import com.roy.coupling.common.messaging.MessageDispatcher
+import com.roy.coupling.common.messaging.commands.CommandReplyOutcome
+import com.roy.coupling.common.messaging.replies.Reply
+import kotlinx.coroutines.channels.Channel
 import kotlin.reflect.KClass
-import kotlin.reflect.KSuspendFunction1
 
-class ParticipantStep<F>(val action: suspend SagaEffect.() -> F) : Saga<F> {
-    private val replayHandlers: MutableMap<String, KSuspendFunction1<*, Unit>> = mutableMapOf()
+class ParticipantStep<A>(
+    val action: suspend SagaStep.() -> A,
+    val compensation: suspend () -> Unit
+) : Saga<A> {
+    var channel = Channel<CommandReplyOutcome>()
 
-    fun <C : Any> onReply(replyClass: KClass<C>, replyHandler: suspend (C) -> Unit): ParticipantStep<F> {
-//        replayHandlers[replyClass.qualifiedName!!] = replyHandler as KSuspendFunction1<C, Unit>
+    fun <C : Reply> onReply(replyClass: KClass<C>, handler: suspend (C) -> Unit): ParticipantStep<A> {
+        MessageDispatcher.onReply(replyClass) { outcome, reply ->
+            handler.invoke(reply)
+            channel.send(outcome)
+        }
         return this
     }
 }

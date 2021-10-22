@@ -8,10 +8,18 @@ spring:
       initial-size: 10
       max-size: 10
 
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9094
+      group-id: coupling-test
+    producer:
+      bootstrap-servers: localhost:9094
+    topics: outbox.event.customer.reply
+
 server:
   port: 8081
 
 logging:
   level:
     ROOT: INFO
-    dev.miku.r2dbc.mysql.message.client.TextQueryMessage: DEBUG
+    com.roy.coupling: TRACE

@@ -25,3 +25,5 @@ spring-boot-starter-data-r2dbc = { module = "org.springframework.boot:spring-boo
 spring-kafka = { module = "org.springframework.kafka:spring-kafka" }
 r2dbc-mysql = { module = "dev.miku:r2dbc-mysql" }
 spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
+arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arraow" }
+arrow-fx-coroutines = { module = "io.arrow-kt:arrow-fx-coroutines", version.ref = "arraow" }

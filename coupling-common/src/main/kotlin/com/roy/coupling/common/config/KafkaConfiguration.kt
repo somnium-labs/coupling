@@ -1,5 +1,6 @@
 package com.roy.coupling.common.config
 
+import com.roy.coupling.common.consumer.KafkaMessageConsumer
 import com.roy.coupling.common.logging.Logger.Companion.log
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.kafka.config.*
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
@@ -18,6 +20,7 @@ import org.springframework.kafka.listener.ContainerProperties
 
 @EnableKafka
 @Configuration
+@Import(KafkaMessageConsumer::class)
 class KafkaConfiguration(private val kafkaProperties: KafkaProperties) {
     @Value("\${spring.kafka.topics}")
     private val topics = listOf<String>()

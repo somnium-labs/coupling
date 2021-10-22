@@ -1,3 +1,5 @@
 package com.roy.coupling.example.common.messaging.replies
 
-interface ReserveCreditResult
+import com.roy.coupling.common.messaging.replies.Reply
+
+interface ReserveCreditResult : Reply

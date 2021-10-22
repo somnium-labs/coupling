@@ -1,7 +1,7 @@
 package com.roy.coupling.common
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.roy.coupling.common.commands.Command
+import com.roy.coupling.common.messaging.commands.Command
 import com.roy.coupling.common.support.JsonSupport
 import org.junit.jupiter.api.Test
 import java.util.*

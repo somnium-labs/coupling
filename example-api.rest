@@ -1,3 +1,17 @@
+### create customer
+POST http://{{customer-endpoint}}/customers
+Content-Type: application/json
+
+{
+  "name": "David Kim",
+  "creditLimit": {
+    "amount": 5
+  }
+}
+
+### get customer
+GET http://{{customer-endpoint}}/customers/1
+
 ### 주문 생성
 POST http://{{order-endpoint}}/orders
 Content-Type: application/json

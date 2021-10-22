@@ -1,0 +1,25 @@
+spring:
+  r2dbc:
+    url: r2dbc:mysql://localhost/coupling
+    username: mysqluser
+    password: mysqlpw
+    pool:
+      enabled: true
+      initial-size: 10
+      max-size: 10
+
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9094
+      group-id: coupling-test
+    producer:
+      bootstrap-servers: localhost:9094
+    topics: outbox.event.customerService
+
+server:
+  port: 8082
+
+logging:
+  level:
+    ROOT: INFO
+    com.roy.coupling: TRACE

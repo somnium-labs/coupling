@@ -1,23 +1,21 @@
 package com.roy.coupling.common.consumer
 
-import com.roy.coupling.common.commands.Command
+import com.roy.coupling.common.messaging.MessageDispatcher.Companion.invokeCommand
+import com.roy.coupling.common.messaging.MessageDispatcher.Companion.invokeReply
+import com.roy.coupling.common.messaging.MessageHeaders
+import com.roy.coupling.common.messaging.Messages
+import com.roy.coupling.common.messaging.commands.CommandHeaders
+import com.roy.coupling.common.messaging.replies.ReplyHeaders
+import com.roy.coupling.common.support.JsonSupport
 import kotlinx.coroutines.runBlocking
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.messaging.handler.annotation.Header
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Component
-import kotlin.reflect.KClass
-import kotlin.reflect.jvm.jvmName
 
 @Component
 class KafkaMessageConsumer {
-    val commandHandlers: MutableList<CommandHandler<*>> = mutableListOf()
-
-    fun <C : Command> commandHandler(command: KClass<C>, handler: suspend (C) -> Unit) {
-        commandHandlers.add(CommandHandler(command, handler))
-    }
-
     @KafkaListener(
         id = LISTNER_ID,
         idIsGroup = false,
@@ -27,22 +25,24 @@ class KafkaMessageConsumer {
     )
     fun listen(
         acknowledgment: Acknowledgment,
-//        consumerRecord: ConsumerRecord<String, String>,
         @Header("id") id: String,
-//        @Header("aggregate_id") aggregateId: String,
-        @Header("command_type") commandType: String,
+        @Header("event_header") eventHeader: String,
         @Payload payload: String,
     ) {
+        // TODO: command랑 reply 스레드를 따로 분리해도 되지 않을까?
         runBlocking {
             try {
-                commandHandlers.find {
-                    it.commandClass.jvmName == commandType
-                }?.invoke(
-                    payload.substring(1, payload.length - 1).replace("\\", "")
-                )  // TODO: debezium producer serializer?
+                val headers = JsonSupport.deserialize<Map<String, String>>(eventHeader)
+                when (headers[MessageHeaders.TYPE]) {
+                    Messages.COMMAND.name -> invokeCommand(payload, headers[CommandHeaders.TYPE]!!)
+                    Messages.REPLY.name -> invokeReply(
+                        headers[ReplyHeaders.OUTCOME]!!, payload, headers[ReplyHeaders.TYPE]!!
+                    )
+                }
                 acknowledgment.acknowledge() // manual commit
             } catch (e: Exception) {
                 // TODO: exception handling
+                println("consumer exception")
             }
         }
     }

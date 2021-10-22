@@ -1,6 +1,13 @@
 package com.roy.coupling.orchestration
 
-class SagaStep<F>(
-    val action: suspend SagaEffect.() -> F,
-    val compensation: suspend (F) -> Unit
-) : Saga<F>
+interface SagaStep {
+    suspend fun <A> Saga<A>.bind(): A
+
+    fun <A> local(action: suspend SagaStep.() -> A): LocalAction<A> {
+        return LocalAction(action)
+    }
+
+    fun <A> remote(action: suspend SagaStep.() -> A): ParticipantAction<A> {
+        return ParticipantAction(action)
+    }
+}

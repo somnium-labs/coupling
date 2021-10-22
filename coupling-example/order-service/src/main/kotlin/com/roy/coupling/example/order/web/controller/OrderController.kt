@@ -7,6 +7,7 @@ import com.roy.coupling.example.order.service.OrderSagaService
 import com.roy.coupling.example.order.web.dto.CreateOrderRequest
 import com.roy.coupling.example.order.web.dto.CreateOrderResponse
 import com.roy.coupling.example.order.web.dto.GetOrderResponse
+import kotlinx.coroutines.flow.toList
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -32,7 +33,7 @@ class OrderController(
 
     @GetMapping("/orders/customer/{customerId}")
     suspend fun getOrdersByCustomerId(@PathVariable customerId: Long): ResponseEntity<List<GetOrderResponse>> {
-        return ResponseEntity(orderRepository.findAllByCustomerId(customerId).map { order ->
+        return ResponseEntity(orderRepository.findAllByCustomerId(customerId).toList().map { order ->
             GetOrderResponse(order.id!!, order.state, order.rejectionReason)
         }, HttpStatus.OK)
     }

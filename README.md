@@ -6,41 +6,40 @@
 
 ### 테스트
 
-현재 Debezium connector를 사용하여 트랜잭션 로그 추적 후, Kafka에 집어 넣는 부분까지 구현 되어 있음.
-
 1. 환경 구성
 
 ```
 $ docker-compose up
+
+# m1 사용자
+$ docker-compose -f docker-compose-m1.yml
 ```
 
 2. debezium connector 등록
 
 ```
-$ http POST http://localhost:8083/connectors < register-mysql.json
+connect-api.rest
+
+### Register connector
+POST http://{{connect-host}}/connectors
 ```
 
-또는 connect-api.rest에 구성된 POST api 실행 (host설정: http-client.env.json)
+3. example service 실행
 
-3. Run CouplingTestApplication
-4. mysql 접속
-5. outbox_event 테이블에 값을 insert 하면 kafka 메시지를 수신하는 것을 로그에서 확인 할 수 있음
+- coupling-example
+    - coupling-example-order-service
+    - coupling-example-customer-service
 
-- CouplingTestApplication에서 구독하는 토픽 topics: outbox.event.test-topic, general-topic
-- outbox.event는 debezium에서 디폴트로 추가한 prefix (변경 또는 제거 가능)
-
-```
-INSERT INTO outbox_event values('1', 'test-topic', '2', 'createOrder', '{"orderId": "2", "count": 10}', now());
-```
+4. example-api.rest 에 구성된 API를 호출하여 테스트
 
 ### TODO
 
-```
-saga {
-    local { create() }
-    participant { reserve() }
-    local { approve() }
-}.withCompensation {
-    reject()
-}
-```
+- reply 핸들러를 app이 시작 될 때 한 번만 등록
+    - 현재는 saga를 생성할때 매번 등록되고 있음.
+- reply 전송시, command에서 받은 aggregateId를 그대로 전송할 수 있게 구조 수정
+- saga dsl 개선 필요
+    - 구조가 썩 마음에 들지 않음
+    - 2개 이상의 participant를 병렬로 처리??
+        - 현재는 순차적으로 처리할 수 밖에 없는 구조
+- 모듈 분리
+    - coupling-participant, coupling-orchestration 확실히 분리

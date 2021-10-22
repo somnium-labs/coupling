@@ -1,6 +1,6 @@
 package com.roy.coupling.example.common.messaging.commands
 
-import com.roy.coupling.common.commands.Command
+import com.roy.coupling.common.messaging.commands.Command
 import com.roy.coupling.example.common.domain.Money
 import org.springframework.data.annotation.Id
 
