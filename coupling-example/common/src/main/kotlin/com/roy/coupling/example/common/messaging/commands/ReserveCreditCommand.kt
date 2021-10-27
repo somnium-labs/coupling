@@ -1,7 +1,7 @@
 package com.roy.coupling.example.common.messaging.commands
 
-import com.roy.coupling.common.messaging.commands.Command
 import com.roy.coupling.example.common.domain.Money
+import com.roy.coupling.messaging.commands.Command
 import org.springframework.data.annotation.Id
 
 data class ReserveCreditCommand(

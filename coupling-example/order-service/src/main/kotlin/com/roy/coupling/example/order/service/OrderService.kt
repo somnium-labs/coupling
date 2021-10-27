@@ -4,9 +4,9 @@ import com.roy.coupling.example.common.messaging.common.OrderDetails
 import com.roy.coupling.example.common.messaging.common.RejectionReason
 import com.roy.coupling.example.order.domain.Order
 import com.roy.coupling.example.order.domain.OrderRepository
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
+@Service
 class OrderService(
     private val orderRepository: OrderRepository
 ) {

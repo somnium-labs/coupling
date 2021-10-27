@@ -1,3 +1,5 @@
+rootProject.name = "coupling"
+
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
@@ -8,10 +10,12 @@ dependencyResolutionManagement {
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 enableFeaturePreview("VERSION_CATALOGS")
 
-rootProject.name = "coupling"
 include("coupling-common")
 include("coupling-orchestration")
 include("coupling-participant")
+include("coupling-messaging")
+include("coupling-consumer")
+include("coupling-producer")
 
 // example
 include("coupling-example:order-service")

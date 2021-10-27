@@ -14,7 +14,7 @@ spring:
       group-id: coupling-test
     producer:
       bootstrap-servers: localhost:9094
-    topics: outbox.event.customer.reply
+    topics: outbox.event.customerService.reply
 
 server:
   port: 8081
