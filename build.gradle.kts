@@ -45,6 +45,9 @@ subprojects {
         implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
         testImplementation("org.testcontainers:junit-jupiter:1.16.0")
+        testImplementation("org.junit.jupiter:junit-jupiter-params")
+        testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0")
+        testImplementation("org.mockito:mockito-inline:2.21.0")
     }
 }
 
